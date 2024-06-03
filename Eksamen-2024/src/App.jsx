@@ -4,7 +4,6 @@ import EquipmentList from './components/EquipmentList.jsx';
 function App() {
   const [equipment, setEquipment] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [lentEquipment, setLentEquipment] = useState([]);
   const itemsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -12,15 +11,42 @@ function App() {
     // Fetch the equipment data from the JSON file
     fetch('/inventory_data_with_categories.json')
       .then(response => response.json())
-      .then(data => setEquipment(data));
+      .then(data => {
+        const groupedData = groupByType(data);
+        setEquipment(groupedData);
+      });
   }, []);
 
+  const groupByType = (items) => {
+    const grouped = {};
+    items.forEach(item => {
+      const key = item.Beskrivelse; // or any unique identifier for the type
+      if (!grouped[key]) {
+        grouped[key] = { ...item, count: 0, lentCount: 0 };
+      }
+      grouped[key].count++;
+    });
+    return Object.values(grouped);
+  };
+
   const handleLend = (item) => {
-    setLentEquipment([...lentEquipment, item]);
+    const updatedEquipment = equipment.map(e => {
+      if (e.Beskrivelse === item.Beskrivelse && e.count > 0) {
+        return { ...e, count: e.count - 1, lentCount: (e.lentCount || 0) + 1 };
+      }
+      return e;
+    });
+    setEquipment(updatedEquipment);
   };
 
   const handleReturn = (item) => {
-    setLentEquipment(lentEquipment.filter(e => e !== item));
+    const updatedEquipment = equipment.map(e => {
+      if (e.Beskrivelse === item.Beskrivelse && e.lentCount > 0) {
+        return { ...e, count: e.count + 1, lentCount: e.lentCount - 1 };
+      }
+      return e;
+    });
+    setEquipment(updatedEquipment);
   };
 
   const filteredEquipment = equipment.filter(item => {
@@ -56,7 +82,6 @@ function App() {
         equipment={currentItems} 
         onLend={handleLend} 
         onReturn={handleReturn} 
-        lentEquipment={lentEquipment} 
       />
 
       <div className="pagination flex justify-center items-center mt-4">
@@ -67,7 +92,7 @@ function App() {
         >
           Forrige
         </button>
-        <span>Page {currentPage} of {totalPages}</span>
+        <span>Side {currentPage} av {totalPages}</span>
         <button 
           onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} 
           disabled={currentPage === totalPages}

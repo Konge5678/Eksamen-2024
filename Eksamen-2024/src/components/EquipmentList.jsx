@@ -1,21 +1,17 @@
 import React from 'react';
 import EquipmentItem from './EquipmentItem.jsx';
 
-function EquipmentList({ equipment, onLend, onReturn, lentEquipment }) {
+function EquipmentList({ equipment, onLend, onReturn }) {
   return (
     <div>
-      {equipment.map((item, index) => {
-        const isLent = lentEquipment.includes(item);
-        return (
-          <EquipmentItem
-            key={index}
-            item={item}
-            onLend={onLend}
-            onReturn={onReturn}
-            isLent={isLent}
-          />
-        );
-      })}
+      {equipment.map((item, index) => (
+        <EquipmentItem
+          key={index}
+          item={item}
+          onLend={onLend}
+          onReturn={onReturn}
+        />
+      ))}
     </div>
   );
 }
