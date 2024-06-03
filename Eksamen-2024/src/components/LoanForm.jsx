@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useEquipment } from '../context/EquipmentContext';  // Correct path
 
-const LoanForm = ({ onLend, equipment }) => {
+const LoanForm = () => {
   const { id } = useParams();
+  const { equipment, handleLend } = useEquipment();
   const navigate = useNavigate();
   const item = equipment.find(e => e.Beskrivelse === id);
   const [userName, setUserName] = useState('');
@@ -10,8 +12,8 @@ const LoanForm = ({ onLend, equipment }) => {
 
   const handleLendClick = () => {
     if (userName && userPhone) {
-      onLend(item, userName, userPhone);
-      navigate('/');
+      handleLend(item, userName, userPhone);
+      navigate('/app');
     } else {
       alert('Skriv in navnet og telefonnummeret ditt.');
     }

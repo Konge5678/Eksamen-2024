@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Add this to your index.css for better button styles */
+
 button {
     transition: background-color 0.3s;
   }
