@@ -7,16 +7,25 @@ export const useEquipment = () => {
 };
 
 export const EquipmentProvider = ({ children }) => {
-  const [equipment, setEquipment] = useState([]);
+  const [equipment, setEquipment] = useState(() => {
+    const savedEquipment = localStorage.getItem('equipment');
+    return savedEquipment ? JSON.parse(savedEquipment) : [];
+  });
 
   useEffect(() => {
-    fetch('/inventory_data_with_categories.json')
-      .then(response => response.json())
-      .then(data => {
-        const groupedData = groupByType(data);
-        setEquipment(groupedData);
-      });
+    if (equipment.length === 0) {
+      fetch('/inventory_data_with_categories.json')
+        .then(response => response.json())
+        .then(data => {
+          const groupedData = groupByType(data);
+          setEquipment(groupedData);
+        });
+    }
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem('equipment', JSON.stringify(equipment));
+  }, [equipment]);
 
   const groupByType = (items) => {
     const grouped = {};

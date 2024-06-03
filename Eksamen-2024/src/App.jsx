@@ -42,7 +42,7 @@ function App() {
         onLend={handleLend} 
         onReturn={handleReturn} 
       />
-      <div className="pagination flex justify-center items-center mt-4">
+      <div className="pagination flex justify-center items-center mt-8 mb-8">
         <button 
           onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} 
           disabled={currentPage === 1}

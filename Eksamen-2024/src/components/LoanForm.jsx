@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useEquipment } from '../context/EquipmentContext';  // Correct path
+import { useEquipment } from '../context/EquipmentContext';  
 
 const LoanForm = () => {
   const { id } = useParams();
@@ -42,7 +42,7 @@ const LoanForm = () => {
       </div>
       <button
         onClick={handleLendClick}
-        className="bg-green-500 text-white px-4 py-2"
+        className="bg-customGreen hover:bg-teal-700 text-white font-bold rounded px-4 py-2"
       >
         Lån Produkt
       </button>
