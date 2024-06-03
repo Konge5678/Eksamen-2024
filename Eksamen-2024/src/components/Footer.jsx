@@ -2,7 +2,7 @@ import React from 'react';
 
 const Footer = () => {
   return (
-    <footer className="bg-customGreen text-white py-10">
+    <footer className="bg-customGreen text-white py-10 sm: mt-10">
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-10 border-b border-white-600 pb-8">
         <div className="border-t border-white-600 pt-4 md:pt-0 md:border-t-0 md:border-r md:pr-4">
           <h2 className="font-bold text-lg mb-4">Kontakt oss</h2>
@@ -30,7 +30,7 @@ const Footer = () => {
           <p>2609 Lillehammer</p>
         </div>
       </div>
-      <div className="container mx-auto px-4 mt-10 flex flex-col md:flex-row justify-between items-center">
+      <div className="container mx-auto px-4 mt-10 flex-col md:flex-row justify-between items-center hidden md:flex">
         <div className="flex space-x-4 mb-4 md:mb-0">
           <a href="#" className="underline">Personvern</a>
           <a href="#" className="underline">Informasjonskapsler (cookies)</a>
