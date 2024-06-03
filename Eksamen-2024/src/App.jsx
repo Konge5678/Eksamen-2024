@@ -22,7 +22,7 @@ function App() {
   const groupByType = (items) => {
     const grouped = {};
     items.forEach(item => {
-      const key = item.Beskrivelse; // or any unique identifier for the type
+      const key = item.Beskrivelse; 
       if (!grouped[key]) {
         grouped[key] = { ...item, count: 0, lentCount: 0 };
       }
