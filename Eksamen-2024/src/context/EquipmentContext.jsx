@@ -12,11 +12,6 @@ export const EquipmentProvider = ({ children }) => {
     return savedEquipment ? JSON.parse(savedEquipment) : [];
   });
 
-  const [loanedItems, setLoanedItems] = useState(() => {
-    const savedLoanedItems = localStorage.getItem('loanedItems');
-    return savedLoanedItems ? JSON.parse(savedLoanedItems) : [];
-  });
-
   useEffect(() => {
     if (equipment.length === 0) {
       fetch('/inventory_data_with_categories.json')
@@ -32,14 +27,10 @@ export const EquipmentProvider = ({ children }) => {
     localStorage.setItem('equipment', JSON.stringify(equipment));
   }, [equipment]);
 
-  useEffect(() => {
-    localStorage.setItem('loanedItems', JSON.stringify(loanedItems));
-  }, [loanedItems]);
-
   const groupByType = (items) => {
     const grouped = {};
     items.forEach(item => {
-      const key = item.Beskrivelse;
+      const key = item.Beskrivelse; 
       if (!grouped[key]) {
         grouped[key] = { ...item, count: 0, lentCount: 0 };
       }
@@ -57,7 +48,10 @@ export const EquipmentProvider = ({ children }) => {
     });
 
     const lentItem = { ...item, userName, userPhone };
-    setLoanedItems([...loanedItems, lentItem]);
+    const lentItems = JSON.parse(localStorage.getItem('lentItems')) || [];
+    lentItems.push(lentItem);
+    localStorage.setItem('lentItems', JSON.stringify(lentItems));
+
     setEquipment(updatedEquipment);
   };
 
@@ -69,13 +63,15 @@ export const EquipmentProvider = ({ children }) => {
       return e;
     });
 
-    const updatedLoanedItems = loanedItems.filter(i => !(i.Beskrivelse === item.Beskrivelse && i.userName === item.userName && i.userPhone === item.userPhone));
-    setLoanedItems(updatedLoanedItems);
+    const lentItems = JSON.parse(localStorage.getItem('lentItems')) || [];
+    const updatedLentItems = lentItems.filter(i => !(i.Beskrivelse === item.Beskrivelse && i.userName === item.userName && i.userPhone === item.userPhone));
+    localStorage.setItem('lentItems', JSON.stringify(updatedLentItems));
+
     setEquipment(updatedEquipment);
   };
 
   return (
-    <EquipmentContext.Provider value={{ equipment, loanedItems, handleLend, handleReturn }}>
+    <EquipmentContext.Provider value={{ equipment, handleLend, handleReturn }}>
       {children}
     </EquipmentContext.Provider>
   );
