@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 function ReturnEquipment({ lentEquipment, onReturn }) {
   return (
@@ -6,7 +6,7 @@ function ReturnEquipment({ lentEquipment, onReturn }) {
       <h2>Return Equipment</h2>
       {lentEquipment.map((item, index) => (
         <div key={index}>
-          <span>{item['Beskrivelse']}</span>
+          <span>{item["Beskrivelse"]}</span>
           <button onClick={() => onReturn(item)}>Return</button>
         </div>
       ))}

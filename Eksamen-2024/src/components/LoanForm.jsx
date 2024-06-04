@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useEquipment } from '../context/EquipmentContext';  
+import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEquipment } from "../context/EquipmentContext";
 
 const LoanForm = () => {
   const { id } = useParams();
   const { equipment, handleLend } = useEquipment();
   const navigate = useNavigate();
-  const item = equipment.find(e => e.Beskrivelse === id);
-  const [userName, setUserName] = useState('');
-  const [userPhone, setUserPhone] = useState('');
+  const item = equipment.find((e) => e.Beskrivelse === id);
+  const [userName, setUserName] = useState("");
+  const [userPhone, setUserPhone] = useState("");
 
   const handleLendClick = () => {
     if (userName && userPhone) {
       handleLend(item, userName, userPhone);
-      navigate('/app');
+      navigate("/app");
     } else {
-      alert('Skriv in navnet og telefonnummeret ditt.');
+      alert("Skriv in navnet og telefonnummeret ditt.");
     }
   };
 
@@ -24,18 +24,18 @@ const LoanForm = () => {
       <h2 className="text-xl font-bold mb-4">Lån {item.Beskrivelse}</h2>
       <div>
         <label className="block mb-2">Navn:</label>
-        <input 
-          type="text" 
-          value={userName} 
+        <input
+          type="text"
+          value={userName}
           onChange={(e) => setUserName(e.target.value)}
           className="border p-2 mb-4 w-full"
         />
       </div>
       <div>
         <label className="block mb-2">Telefon Nummer:</label>
-        <input 
-          type="text" 
-          value={userPhone} 
+        <input
+          type="number"
+          value={userPhone}
           onChange={(e) => setUserPhone(e.target.value)}
           className="border p-2 mb-4 w-full"
         />
@@ -48,6 +48,6 @@ const LoanForm = () => {
       </button>
     </div>
   );
-}
+};
 
 export default LoanForm;

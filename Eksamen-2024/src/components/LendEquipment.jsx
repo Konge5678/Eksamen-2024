@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 function LendEquipment({ equipment, onLend }) {
   return (
@@ -6,7 +6,7 @@ function LendEquipment({ equipment, onLend }) {
       <h2>Lend Equipment</h2>
       {equipment.map((item, index) => (
         <div key={index}>
-          <span>{item['Beskrivelse']}</span>
+          <span>{item["Beskrivelse"]}</span>
           <button onClick={() => onLend(item)}>Lend</button>
         </div>
       ))}
