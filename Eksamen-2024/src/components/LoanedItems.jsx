@@ -56,7 +56,7 @@ const LoanedItems = () => {
           </div>
         ))
       ) : (
-        <p>Ingen produkter lånt ut.</p>
+        <p className="mb-80">Ingen produkter er lånt ut.</p>
       )}
     </div>
   );
