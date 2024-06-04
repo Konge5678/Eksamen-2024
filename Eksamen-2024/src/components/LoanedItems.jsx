@@ -1,20 +1,18 @@
-import React, { useState } from "react";
-import { useEquipment } from "../context/EquipmentContext";
+import React, { useState } from 'react';
+import { useEquipment } from '../context/EquipmentContext';
+import { useAuth } from '../context/AuthContext';
 
 const LoanedItems = () => {
-  const { handleReturn } = useEquipment();
-  const [searchTerm, setSearchTerm] = useState("");
-  const lentItems = JSON.parse(localStorage.getItem("lentItems")) || [];
+  const { loanedItems, handleReturn } = useEquipment();
+  const { isAdmin } = useAuth();
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredLoanedItems = lentItems.filter((item) => {
+  const filteredLoanedItems = loanedItems.filter(item => {
     const searchTermLower = searchTerm.toLowerCase();
     return (
+      item.userName.toLowerCase().includes(searchTermLower) ||
       item.Beskrivelse.toLowerCase().includes(searchTermLower) ||
-      (item.Produsent &&
-        item.Produsent.toLowerCase().includes(searchTermLower)) ||
-      (item.Kategori &&
-        item.Kategori.toLowerCase().includes(searchTermLower)) ||
-      (item.userName && item.userName.toLowerCase().includes(searchTermLower))
+      (item.Produsent && item.Produsent.toLowerCase().includes(searchTermLower))
     );
   });
 
@@ -26,27 +24,17 @@ const LoanedItems = () => {
         placeholder="Søk etter lånte produkter"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="border p-2 mb-4 w-full"
+        className="border p-2 mb-4"
       />
       {filteredLoanedItems.length > 0 ? (
         filteredLoanedItems.map((item, index) => (
           <div key={index} className="border bg-gray-300 rounded-md p-4 mb-2">
             <h2 className="text-xl font-bold">{item.Beskrivelse}</h2>
-            <p>
-              <strong>Produsent:</strong> {item.Produsent}
-            </p>
-            <p>
-              <strong>Spesifikasjoner:</strong> {item.Spesifikasjoner}
-            </p>
-            <p>
-              <strong>Kategori:</strong> {item.Kategori}
-            </p>
-            <p>
-              <strong>Lånt av:</strong> {item.userName}
-            </p>
-            <p>
-              <strong>Telefon:</strong> {item.userPhone}
-            </p>
+            <p><strong>Produsent:</strong> {item.Produsent}</p>
+            <p><strong>Spesifikasjoner:</strong> {item.Spesifikasjoner}</p>
+            <p><strong>Kategori:</strong> {item.Kategori}</p>
+            <p><strong>Lånt av:</strong> {item.userName}</p>
+            {isAdmin && <p><strong>Telefon:</strong> {item.userPhone}</p>}
             <button
               onClick={() => handleReturn(item)}
               className="bg-red-500 text-white rounded px-4 py-2 mt-2"
@@ -56,7 +44,7 @@ const LoanedItems = () => {
           </div>
         ))
       ) : (
-        <p className="mb-80">Ingen produkter er lånt ut.</p>
+        <p className='mb-60'>Ingen produkter lånt ut.</p>
       )}
     </div>
   );
