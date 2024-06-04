@@ -8,24 +8,19 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(() => {
-    const saved = localStorage.getItem('isAdmin');
-    return saved === 'true';
+    return localStorage.getItem('isAdmin') === 'true';
   });
-
-  useEffect(() => {
-    localStorage.setItem('isAdmin', isAdmin);
-  }, [isAdmin]);
 
   const login = (username, password) => {
     if (username === 'Admin' && password === '123') {
       setIsAdmin(true);
-      return true;
+      localStorage.setItem('isAdmin', 'true');
     }
-    return false;
   };
 
   const logout = () => {
     setIsAdmin(false);
+    localStorage.removeItem('isAdmin');
   };
 
   return (
