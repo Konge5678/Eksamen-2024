@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
-  const { user, logout } = useAuth();
+  const { currentUser, isAdmin, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -31,7 +31,7 @@ const Navbar = () => {
           >
             Returner
           </Link>
-          {user ? (
+          {currentUser ? (
             <>
               <button
                 onClick={logout}
@@ -39,8 +39,8 @@ const Navbar = () => {
               >
                 Logg ut
               </button>
-              <span className="text-customGreen font-bold">
-                {user.username}
+              <span className="text-gray-800 font-bold">
+                {currentUser.username}
               </span>
             </>
           ) : (
@@ -49,7 +49,7 @@ const Navbar = () => {
                 to="/login"
                 className="bg-customGreen hover:bg-teal-700 text-white font-bold py-2 px-4 rounded"
               >
-                Logg inn
+                Logg Inn
               </Link>
               <Link
                 to="/register"
@@ -98,16 +98,21 @@ const Navbar = () => {
           >
             Returner
           </Link>
-          {user ? (
-            <button
-              onClick={() => {
-                toggleMenu();
-                logout();
-              }}
-              className="block w-full bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded my-2 mx-4"
-            >
-              Logg ut
-            </button>
+          {currentUser ? (
+            <>
+              <button
+                onClick={() => {
+                  toggleMenu();
+                  logout();
+                }}
+                className="block w-full bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded my-2 mx-4 w-40"
+              >
+                Logg ut
+              </button>
+              <span className="block text-gray-800 font-bold py-2 px-4">
+                {currentUser.username}
+              </span>
+            </>
           ) : (
             <>
               <Link
@@ -115,7 +120,7 @@ const Navbar = () => {
                 onClick={toggleMenu}
                 className="block bg-customGreen hover:bg-teal-700 text-white font-bold py-2 px-4 rounded my-2 mx-4"
               >
-                Logg inn
+                Logg Inn
               </Link>
               <Link
                 to="/register"
