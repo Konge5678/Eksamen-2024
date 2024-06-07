@@ -7,61 +7,56 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(() => {
-    return JSON.parse(localStorage.getItem("currentUser")) || null;
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
   });
+
+  useEffect(() => {
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const adminUser = users.find((user) => user.username === "Admin");
+    if (!adminUser) {
+      users.push({ username: "Admin", password: "admin123" });
+      localStorage.setItem("users", JSON.stringify(users));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    } else {
+      localStorage.removeItem("user");
+    }
+  }, [user]);
 
   const login = (username, password) => {
     const users = JSON.parse(localStorage.getItem("users")) || [];
-    const user = users.find(
+    const existingUser = users.find(
       (u) => u.username === username && u.password === password
     );
-    if (user) {
-      setCurrentUser(user);
-      localStorage.setItem("currentUser", JSON.stringify(user));
+    if (existingUser) {
+      setUser(existingUser);
       return true;
     }
     return false;
+  };
+
+  const logout = () => {
+    setUser(null);
   };
 
   const register = (username, password) => {
     const users = JSON.parse(localStorage.getItem("users")) || [];
-    if (users.find((u) => u.username === username)) {
-      return false; // Username already exists
-    }
     const newUser = { username, password };
     users.push(newUser);
     localStorage.setItem("users", JSON.stringify(users));
-    return true;
+    setUser(newUser);
   };
 
-  const logout = () => {
-    setCurrentUser(null);
-    localStorage.removeItem("currentUser");
-  };
-
-  const resetPassword = (username, newPassword) => {
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const userIndex = users.findIndex((u) => u.username === username);
-    if (userIndex !== -1) {
-      users[userIndex].password = newPassword;
-      localStorage.setItem("users", JSON.stringify(users));
-      return true;
-    }
-    return false;
-  };
+  const isAdmin = user && user.username === "Admin";
 
   return (
-    <AuthContext.Provider
-      value={{
-        currentUser,
-        isAdmin: currentUser?.username === "Admin",
-        login,
-        register,
-        logout,
-        resetPassword,
-      }}
-    >
+    <AuthContext.Provider value={{ user, login, logout, register, isAdmin }}>
       {children}
     </AuthContext.Provider>
   );

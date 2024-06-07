@@ -1,9 +1,10 @@
+// Navbar.jsx
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
-  const { currentUser, isAdmin, logout } = useAuth();
+  const { user, isAdmin, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -31,7 +32,7 @@ const Navbar = () => {
           >
             Returner
           </Link>
-          {currentUser ? (
+          {user ? (
             <>
               <button
                 onClick={logout}
@@ -39,9 +40,7 @@ const Navbar = () => {
               >
                 Logg ut
               </button>
-              <span className="text-gray-800 font-bold">
-                {currentUser.username}
-              </span>
+              <span className="text-gray-800 font-bold">{user.username}</span>
             </>
           ) : (
             <>
@@ -98,39 +97,32 @@ const Navbar = () => {
           >
             Returner
           </Link>
-          {currentUser ? (
-            <>
-              <button
-                onClick={() => {
-                  toggleMenu();
-                  logout();
-                }}
-                className="block w-full bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded my-2 mx-4 w-40"
-              >
-                Logg ut
-              </button>
-              <span className="block text-gray-800 font-bold py-2 px-4">
-                {currentUser.username}
-              </span>
-            </>
+          {user ? (
+            <button
+              onClick={() => {
+                toggleMenu();
+                logout();
+              }}
+              className="block w-full bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded my-2 mx-4 max-w-60"
+            >
+              Logg ut
+            </button>
           ) : (
-            <>
-              <Link
-                to="/login"
-                onClick={toggleMenu}
-                className="block bg-customGreen hover:bg-teal-700 text-white font-bold py-2 px-4 rounded my-2 mx-4"
-              >
-                Logg Inn
-              </Link>
-              <Link
-                to="/register"
-                onClick={toggleMenu}
-                className="block bg-customGreen hover:bg-teal-700 text-white font-bold py-2 px-4 rounded my-2 mx-4"
-              >
-                Registrer
-              </Link>
-            </>
+            <Link
+              to="/login"
+              onClick={toggleMenu}
+              className="block bg-customGreen hover:bg-teal-700 text-white font-bold py-2 px-4 rounded my-2 mx-4"
+            >
+              Logg Inn
+            </Link>
           )}
+          <Link
+            to="/register"
+            onClick={toggleMenu}
+            className="block bg-customGreen hover:bg-teal-700 text-white font-bold py-2 px-4 rounded my-2 mx-4"
+          >
+            Registrer
+          </Link>
         </div>
       )}
     </nav>

@@ -4,41 +4,35 @@ import { useAuth } from "../context/AuthContext";
 
 const LoanedItems = () => {
   const { equipment, handleReturn } = useEquipment();
-  const { currentUser } = useAuth();
-  const [searchTerm, setSearchTerm] = useState("");
-
+  const { isAdmin } = useAuth();
   const lentItems = JSON.parse(localStorage.getItem("lentItems")) || [];
+  const [searchTerm, setSearchTerm] = useState("");
 
   const filteredItems = lentItems.filter((item) => {
     const searchTermLower = searchTerm.toLowerCase();
-    const searchInSpecs = item["Spesifikasjoner"]
-      ? item["Spesifikasjoner"].toLowerCase().includes(searchTermLower)
-      : false;
-
     return (
-      (item["Produsent"] &&
-        item["Produsent"].toLowerCase().includes(searchTermLower)) ||
-      (item["Beskrivelse"] &&
-        item["Beskrivelse"].toLowerCase().includes(searchTermLower)) ||
-      (item["Kategori"] &&
-        item["Kategori"].toLowerCase().includes(searchTermLower)) ||
-      (item["userName"] &&
-        item["userName"].toLowerCase().includes(searchTermLower)) ||
-      searchInSpecs
+      (item.Beskrivelse &&
+        item.Beskrivelse.toLowerCase().includes(searchTermLower)) ||
+      (item.Produsent &&
+        item.Produsent.toLowerCase().includes(searchTermLower)) ||
+      (item.Spesifikasjoner &&
+        item.Spesifikasjoner.toLowerCase().includes(searchTermLower)) ||
+      (item.Kategori &&
+        item.Kategori.toLowerCase().includes(searchTermLower)) ||
+      (item.userName && item.userName.toLowerCase().includes(searchTermLower))
     );
   });
 
   return (
-    <div className="container mx-auto p-4 min-h-screen mt-20">
-      <h2 className="text-4xl font-bold mb-6">Lånte produkter</h2>
+    <div className="container mx-auto p-4 min-h-screen">
+      <h2 className="text-xl font-bold mb-4">Lånte produkter</h2>
       <input
         type="text"
-        placeholder="Søk etter utlånte produkter"
+        placeholder="Søk etter lånte produkter"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="border p-2 mb-4 w-60"
+        className="border p-2 mb-4"
       />
-
       {filteredItems.length > 0 ? (
         filteredItems.map((item, index) => (
           <div key={index} className="border bg-gray-300 rounded-md p-4 mb-2">
@@ -55,7 +49,7 @@ const LoanedItems = () => {
             <p>
               <strong>Lånt av:</strong> {item.userName}
             </p>
-            {currentUser?.role === "admin" && (
+            {isAdmin && (
               <p>
                 <strong>Telefon:</strong> {item.userPhone}
               </p>
