@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
@@ -12,14 +12,14 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (login(username, password)) {
-      navigate("/app");
+      navigate("/");
     } else {
-      setError("Ugylig brukernavn eller passord");
+      setError("Ugyldig brukernavn eller passord");
     }
   };
 
   return (
-    <div className="container mx-auto p-4 min-h-screen mt-20">
+    <div className="container mx-auto p-4 mt-20 min-h-screen">
       <h2 className="text-4xl font-bold mb-4">Logg Inn</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -50,6 +50,14 @@ const Login = () => {
         </button>
         {error && <p className="mt-4 text-red-500">{error}</p>}
       </form>
+      <div className="mt-4">
+        <Link
+          to="/forgot-password"
+          className="text-customGreen hover:underline"
+        >
+          Glemt passord?
+        </Link>
+      </div>
     </div>
   );
 };

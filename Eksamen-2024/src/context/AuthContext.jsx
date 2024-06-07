@@ -1,68 +1,68 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
 
 const AuthContext = createContext();
 
-const defaultAdmin = { username: "Admin", password: "admin123", role: "admin" };
+export const useAuth = () => {
+  return useContext(AuthContext);
+};
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(() => {
-    const savedUser = JSON.parse(localStorage.getItem("currentUser"));
-    return savedUser || null;
+    return JSON.parse(localStorage.getItem("currentUser")) || null;
   });
-
-  const [users, setUsers] = useState(() => {
-    const savedUsers = JSON.parse(localStorage.getItem("users"));
-    return savedUsers ? savedUsers : [defaultAdmin];
-  });
-
-  useEffect(() => {
-    localStorage.setItem("currentUser", JSON.stringify(currentUser));
-  }, [currentUser]);
-
-  useEffect(() => {
-    localStorage.setItem("users", JSON.stringify(users));
-  }, [users]);
 
   const login = (username, password) => {
+    const users = JSON.parse(localStorage.getItem("users")) || [];
     const user = users.find(
-      (user) => user.username === username && user.password === password
+      (u) => u.username === username && u.password === password
     );
     if (user) {
       setCurrentUser(user);
+      localStorage.setItem("currentUser", JSON.stringify(user));
       return true;
     }
     return false;
   };
 
-  const logout = () => {
-    setCurrentUser(null);
-  };
-
   const register = (username, password) => {
-    const existingUser = users.find((user) => user.username === username);
-    if (existingUser) {
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    if (users.find((u) => u.username === username)) {
       return false; // Username already exists
     }
-    const newUser = { username, password, role: "user" };
-    setUsers([...users, newUser]);
+    const newUser = { username, password };
+    users.push(newUser);
+    localStorage.setItem("users", JSON.stringify(users));
     return true;
+  };
+
+  const logout = () => {
+    setCurrentUser(null);
+    localStorage.removeItem("currentUser");
+  };
+
+  const resetPassword = (username, newPassword) => {
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const userIndex = users.findIndex((u) => u.username === username);
+    if (userIndex !== -1) {
+      users[userIndex].password = newPassword;
+      localStorage.setItem("users", JSON.stringify(users));
+      return true;
+    }
+    return false;
   };
 
   return (
     <AuthContext.Provider
       value={{
         currentUser,
-        isAdmin: currentUser?.role === "admin",
+        isAdmin: currentUser?.username === "Admin",
         login,
-        logout,
         register,
+        logout,
+        resetPassword,
       }}
     >
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  return useContext(AuthContext);
 };

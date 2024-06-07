@@ -1,3 +1,4 @@
+// src/components/ForgotPassword.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -5,19 +6,23 @@ import { useAuth } from "../context/AuthContext";
 const ForgotPassword = () => {
   const [username, setUsername] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const { forgotPassword } = useAuth();
+  const [error, setError] = useState("");
+  const { resetPassword } = useAuth();
   const navigate = useNavigate();
 
-  const handleForgotPassword = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    forgotPassword(username, newPassword);
-    navigate("/login");
+    if (resetPassword(username, newPassword)) {
+      navigate("/login");
+    } else {
+      setError("Brukernavn ikke funnet");
+    }
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h2 className="text-xl font-bold mb-4">Glemt passord</h2>
-      <form onSubmit={handleForgotPassword}>
+    <div className="container mx-auto p-4 mt-20 min-h-screen">
+      <h2 className="text-4xl font-bold mb-4">Tilbakestill passord</h2>
+      <form onSubmit={handleSubmit}>
         <div>
           <label className="block mb-2">Brukernavn:</label>
           <input
@@ -40,10 +45,11 @@ const ForgotPassword = () => {
         </div>
         <button
           type="submit"
-          className="bg-customGreen hover:bg-teal-700 text-white font-bold rounded px-4 py-2"
+          className="bg-customGreen hover:bg-teal-700 text-white font-bold py-2 px-4 rounded"
         >
-          Oppdater passord
+          Tilbakestill passord
         </button>
+        {error && <p className="mt-4 text-red-500">{error}</p>}
       </form>
     </div>
   );
