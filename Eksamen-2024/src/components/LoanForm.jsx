@@ -20,7 +20,7 @@ const LoanForm = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 min-h-screen">
       <h2 className="text-xl font-bold mb-4">Lån {item.Beskrivelse}</h2>
       <div>
         <label className="block mb-2">Navn:</label>

@@ -1,26 +1,26 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from "react";
 
 const AuthContext = createContext();
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(() => {
-    return localStorage.getItem('isAdmin') === 'true';
+    return localStorage.getItem("isAdmin") === "true";
   });
 
   const login = (username, password) => {
-    if (username === 'Admin' && password === '123') {
+    if (username === "Admin" && password === "123") {
       setIsAdmin(true);
-      localStorage.setItem('isAdmin', 'true');
+      localStorage.setItem("isAdmin", "true");
+      return true;
     }
+    return false;
   };
 
   const logout = () => {
     setIsAdmin(false);
-    localStorage.removeItem('isAdmin');
+    localStorage.removeItem("isAdmin");
   };
 
   return (
